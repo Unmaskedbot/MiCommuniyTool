@@ -1,11 +1,9 @@
 #!/usr/bin/python
 
-versionCode = '500418'
-versionName = '5.4.18'
-
 import os
 import importlib
 
+# Ensure required libraries are installed
 while True:
     for lib in ['requests', 'ntplib']:
         try:
@@ -16,15 +14,44 @@ while True:
     else:
         break
 
-import requests, json, hashlib, urllib.parse, time, sys, os, base64, ntplib
+import requests, json, time, ntplib
 from datetime import datetime, timedelta, timezone
-from urllib.parse import parse_qs, urlparse, quote
 
+# ==========================================
+#          CONFIGURATION SECTION
+# ==========================================
+
+# 1. Enter your Xiaomi Community Token and Device ID here:
+new_bbs_serviceToken = "YOUR_SERVICE_TOKEN_HERE" 
+deviceId = "YOUR_DEVICE_ID_HERE"
+
+# 2. API & App Variables
+api = "https://api.vip.miui.com/mtop/planet/vip/member/"
+User = "XiaomiCommunity/5.3.31 (Linux; U; Android 14; en-US; 23117RK66C Build/UKQ1.230804.001)"
+versionCode = '500418'
+versionName = '5.4.18'
 version = "1.5.3"
-# ===== COS =====
+
+# ==========================================
+
+# ===== ENDPOINTS =====
+U_apply = api + "apply/bl-auth"
+U_info = api + "user/data"
+U_state = api + "apply/bl-state"
+
+headers = {
+  'User-Agent': User,
+  'Accept-Encoding': "gzip",
+  'Content-Type': "application/json",
+  'content-type': "application/json; charset=utf-8",
+  'Cookie': f"new_bbs_serviceToken={new_bbs_serviceToken};versionCode={versionCode};versionName={versionName};deviceId={deviceId};"
+}
+
+# ===== COLORS =====
 CYAN = "\033[96m"
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
+RED = "\033[91m"
 WHITE = "\033[97m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
@@ -34,6 +61,25 @@ print(
     f"{CYAN}{BOLD}║{RESET}    {WHITE}{BOLD}[V{version}] For issues or feedback{RESET}   {CYAN}{BOLD}║{RESET}\n"
     f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
     f"{CYAN}{BOLD}║  {RESET} {YELLOW}Telegram Channel:{RESET} {GREEN}t.me/micommit{RESET}    {CYAN}{BOLD}║{RESET}\n"
+    f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
+    f"{CYAN}{BOLD}║         {RESET} {YELLOW}Made By:{RESET} {GREEN} micommit {RESET}          {CYAN}{BOLD}║{RESET}\n"
+    f"{CYAN}{BOLD}╚══════════════════════════════════════╝{RESET}\n"
+)
+
+# ===== INFO BOX =====
+try:
+    info_req = requests.get(U_info, headers=headers).json()
+    if 'data' not in info_req or info_req['data'] is None:
+        exit(f"{RED}Failed to fetch account info. Please check your new_bbs_serviceToken and deviceId.{RESET}")
+    info = info_req['data']
+
+    print(
+        f"\n{CYAN}{BOLD}╔══════════════════════════════════════╗{RESET}\n"
+        f"{CYAN}{BOLD}║{RESET}            {WHITE}{BOLD}ACCOUNT INFO{RESET}              {CYAN}{BOLD}║{RESET}\n"
+        f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
+        f"{CYAN}{BOLD}║        {RESET} {YELLOW}Days in Community:{RESET} {WHITE}{info.get('registered_day', 'N/A')}{RESET}         {CYAN}{BOLD}║{RESET}\n"
+        f"{CYAN}{BOLD}║        {RESET} {YELLOW}Level:{RESET} {WHITE}LV{info.get('level_info', {}).get('level', '?')} {info.get('level_info', {}).get('level_title', '')}{RESET}        {CYAN}{BOLD}║{RESET}\n"
+        f"{CYAN}{BOLD}║        {RESET} {YELLOW}Next Level Points:{RESET} {WHITE}{info.
     f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
     f"{CYAN}{BOLD}║         {RESET} {YELLOW}Made By:{RESET} {GREEN} micommit {RESET}          {CYAN}{BOLD}║{RESET}\n"
     f"{CYAN}{BOLD}╚══════════════════════════════════════╝{RESET}\n"
