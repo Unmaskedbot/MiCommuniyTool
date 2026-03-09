@@ -1,295 +1,285 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 import importlib
 
-# Ensure required libraries are installed
+# ===== INSTALL REQUIRED LIBRARIES =====
 while True:
-    for lib in ['requests', 'ntplib']:
+    for lib in ["requests", "ntplib"]:
         try:
             importlib.import_module(lib)
         except ModuleNotFoundError:
-            os.system(f'pip install {lib}')
+            os.system(f"pip install {lib}")
             break
     else:
         break
 
-import requests, json, time, ntplib
+import requests
+import json
+import time
+import ntplib
 from datetime import datetime, timedelta, timezone
 
 # ==========================================
-#          CONFIGURATION SECTION
+#            CONFIGURATION
 # ==========================================
 
-# 1. Enter your Xiaomi Community Token and Device ID here:
-new_bbs_serviceToken = "YOUR_SERVICE_TOKEN_HERE" 
+new_bbs_serviceToken = "YOUR_SERVICE_TOKEN_HERE"
 deviceId = "YOUR_DEVICE_ID_HERE"
 
-# 2. API & App Variables
 api = "https://api.vip.miui.com/mtop/planet/vip/member/"
-User = "XiaomiCommunity/5.3.31 (Linux; U; Android 14; en-US; 23117RK66C Build/UKQ1.230804.001)"
-versionCode = '500418'
-versionName = '5.4.18'
-version = "1.5.3"
+
+User = "XiaomiCommunity/5.4.18 (Linux; Android 14)"
+
+versionCode = "500418"
+versionName = "5.4.18"
 
 # ==========================================
 
-# ===== ENDPOINTS =====
 U_apply = api + "apply/bl-auth"
 U_info = api + "user/data"
 U_state = api + "apply/bl-state"
 
 headers = {
-  'User-Agent': User,
-  'Accept-Encoding': "gzip",
-  'Content-Type': "application/json",
-  'content-type': "application/json; charset=utf-8",
-  'Cookie': f"new_bbs_serviceToken={new_bbs_serviceToken};versionCode={versionCode};versionName={versionName};deviceId={deviceId};"
+    "User-Agent": User,
+    "Content-Type": "application/json",
+    "Cookie": f"new_bbs_serviceToken={new_bbs_serviceToken};versionCode={versionCode};versionName={versionName};deviceId={deviceId};"
 }
 
 # ===== COLORS =====
-CYAN = "\033[96m"
-GREEN = "\033[92m"
-YELLOW = "\033[93m"
-RED = "\033[91m"
-WHITE = "\033[97m"
-BOLD = "\033[1m"
-RESET = "\033[0m"
+CYAN="\033[96m"
+GREEN="\033[92m"
+YELLOW="\033[93m"
+RED="\033[91m"
+WHITE="\033[97m"
+BOLD="\033[1m"
+RESET="\033[0m"
 
-print(
-    f"\n{CYAN}{BOLD}╔══════════════════════════════════════╗{RESET}\n"
-    f"{CYAN}{BOLD}║{RESET}    {WHITE}{BOLD}[V{version}] For issues or feedback{RESET}   {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
-    f"{CYAN}{BOLD}║  {RESET} {YELLOW}Telegram Channel:{RESET} {GREEN}t.me/micommit{RESET}    {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
-    f"{CYAN}{BOLD}║         {RESET} {YELLOW}Made By:{RESET} {GREEN} micommit {RESET}          {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}╚══════════════════════════════════════╝{RESET}\n"
-)
+print(f"""
+{CYAN}{BOLD}╔══════════════════════════════════════╗
+║        Xiaomi Community Unlock Permission Tool        ║
+╚══════════════════════════════════════╝{RESET}
+""")
 
-# ===== INFO BOX =====
-try:
-    info_req = requests.get(U_info, headers=headers).json()
-    if 'data' not in info_req or info_req['data'] is None:
-        exit(f"{RED}Failed to fetch account info. Please check your new_bbs_serviceToken and deviceId.{RESET}")
-    info = info_req['data']
+# ==========================================
+#           ACCOUNT INFO
+# ==========================================
 
-    print(
-        f"\n{CYAN}{BOLD}╔══════════════════════════════════════╗{RESET}\n"
-        f"{CYAN}{BOLD}║{RESET}            {WHITE}{BOLD}ACCOUNT INFO{RESET}              {CYAN}{BOLD}║{RESET}\n"
-        f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
-        f"{CYAN}{BOLD}║        {RESET} {YELLOW}Days in Community:{RESET} {WHITE}{info.get('registered_day', 'N/A')}{RESET}         {CYAN}{BOLD}║{RESET}\n"
-        f"{CYAN}{BOLD}║        {RESET} {YELLOW}Level:{RESET} {WHITE}LV{info.get('level_info', {}).get('level', '?')} {info.get('level_info', {}).get('level_title', '')}{RESET}        {CYAN}{BOLD}║{RESET}\n"
-        f"{CYAN}{BOLD}║        {RESET} {YELLOW}Next Level Points:{RESET} {WHITE}{info.
-    f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
-    f"{CYAN}{BOLD}║         {RESET} {YELLOW}Made By:{RESET} {GREEN} micommit {RESET}          {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}╚══════════════════════════════════════╝{RESET}\n"
-)
-def
+def account_info():
 
     try:
-        r = requests.get(url, params={
-            "chat_id": CHANNEL_USERNAME,
-            "
-    res = parse(r)
 
-    if res["code"] == 70016: exit("invalid user or pwd")
-    if 'notificationUrl' in res:
-        url = res['notificationUrl']
-        if any(x in url for x in ['callback','SetEmail','BindAppealOrSafePhone']): exit(url)
+        info = requests.get(U_info, headers=headers).json()["data"]
 
-        cookies.update({"NativeUserAgent": base64.b64encode(User.encode()).decode()})
-        params = parse_qs(urlparse(url).query)
-        cookies.update(requests.get(f"{base_url}/identity/list", params=params, headers=headers, cookies=cookies).cookies.get_dict())
+        level = info["level_info"]["level"]
+        title = info["level_info"]["level_title"]
+        current = info["level_info"]["current_value"]
+        maxv = info["level_info"]["max_value"]
 
-     email = parse(requests.get(f"{base_url}/identity/auth/verifyEmail", params={'_json': True}, cookies=cookies, headers=headers))['maskedEmail']
-        quota = parse(requests.post(f"{base_url}/identity/pass/sms/userQuota", data={'addressType': 'EM', 'contentType': 160040}, cookies=cookies, headers=headers))['info']
-        print(f"Account Authentication\nemail: {email}, Remaining attempts: {quota}")
-        input("\nPress Enter to send the verification code")
+        next_points = maxv - current
 
-        code_res = parse(requests.post(f"{base_url}/identity/auth/sendEmailTicket", cookies=cookies, headers=headers))
+        print(f"""
+{CYAN}{BOLD}╔══════════════════════════════════════╗
+║             ACCOUNT INFO             ║
+╠══════════════════════════════════════╣
+║ Days in Community : {info['registered_day']}
+║ Level             : LV{level} {title}
+║ Points            : {current}
+║ Points to Next LV : {next_points}
+╚══════════════════════════════════════╝
+{RESET}
+""")
 
-        if code_res["code"] == 0: print(f"\nVerification code sent to your {email}")
-        elif code_res["code"] == 70022: exit("Sent too many codes. Try again tomorrow.")
-        else: exit(code_res)
+    except Exception as e:
 
-        while True:
-            ticket = input("Enter code: ").strip()
-            v_res = parse(requests.post(f"{base_url}/identity/auth/verifyEmail", data={'ticket':ticket, 'trust':True}, cookies=cookies, headers=headers))
-            if v_res["code"] == 70014: print("Verification code error")
-            elif v_res["code"] == 0:
-                cookies.update(requests.get(v_res['location'], headers=headers, cookies=cookies).history[1].cookies.get_dict())
-                cookies.pop("pass_ua", None)
-                break
-            else: exit(v_res)
+        exit(f"{RED}Failed to get account info\n{e}{RESET}")
 
-        r = 
-U_apply = api + "apply/bl-auth"
-U_info = api + "user/data"
-
-headers = {
-  'User-Agent': User,
-  'Accept-Encoding': "gzip",
-  'Content-Type': "application/json",
-  'content-type': "application/json; charset=utf-8",
-  'Cookie': f"new_bbs_serviceToken={new_bbs_serviceToken};versionCode={versionCode};versionName={versionName};deviceId={deviceId};"
-}
-
-# ===== COLORS =====
-CYAN = "\033[96m"
-GREEN = "\033[92m"
-YELLOW = "\033[93m"
-RED = "\033[91m"
-WHITE = "\033[97m"
-BOLD = "\033[1m"
-RESET = "\033[0m"
-
-
-# ===== INFO BOX =====
-info = requests.get(U_info, headers=headers).json()['data']
-
-print(
-    f"\n{CYAN}{BOLD}╔══════════════════════════════════════╗{RESET}\n"
-    f"{CYAN}{BOLD}║{RESET}            {WHITE}{BOLD}ACCOUNT INFO{RESET}              {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
-    f"{CYAN}{BOLD}║        {RESET} {YELLOW}Days in Community:{RESET} {WHITE}{info['registered_day']}{RESET}         {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}║        {RESET} {YELLOW}Level:{RESET} {WHITE}LV{info['level_info']['level']} {info['level_info']['level_title']}{RESET}        {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}║        {RESET} {YELLOW}Next Level Points:{RESET} {WHITE}{info['level_info']['max_value'] - info['level_info']['current_value']}{RESET}        {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}║        {RESET} {YELLOW}Points:{RESET} {WHITE}{info['level_info']['current_value']}{RESET}                    {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}╚══════════════════════════════════════╝{RESET}\n"
-)
-
+# ==========================================
+#           ACCOUNT STATE
+# ==========================================
 
 def state_request():
-    print(
-        f"{GREEN}{BOLD}╔══════════════════════════════════════╗{RESET}\n"
-        f"{GREEN}{BOLD}║{RESET}             {WHITE}{BOLD}ACCOUNT STATE{RESET}            {GREEN}{BOLD}║{RESET}\n"
-        f"{GREEN}{BOLD}╚══════════════════════════════════════╝{RESET}"
-    )
+
+    print(f"{GREEN}\nChecking account state...{RESET}")
 
     try:
-        state = requests.get(U_state, headers=headers).json().get("data", {})
-        is_ = state.get("is_pass")
-        button_ = state.get("button_state")
-        deadline_ = state.get("deadline_format", "")
 
-        if is_ == 1:
-            exit(f"{GREEN}✔ Unlock access granted till {deadline_} (Beijing time){RESET}\n")
+        state = requests.get(U_state, headers=headers).json()["data"]
 
-        msg = {
-            1: f"{YELLOW}➤ Apply for bootloader unlocking{RESET}\n",
-            2: f"{RED}✖ Account Error, try again after {deadline_} (mm/dd){RESET}\n",
-            3: f"{RED}✖ Account must be registered over 30 days{RESET}\n"
-        }
+        is_pass = state.get("is_pass")
+        button = state.get("button_state")
+        deadline = state.get("deadline_format","")
 
-        print(msg.get(button_, ""))
+        if is_pass == 1:
 
-        if button_ in [2, 3]:
-            exit()
+            exit(f"{GREEN}✔ Bootloader already unlocked until {deadline}{RESET}")
+
+        if button == 1:
+            print(f"{YELLOW}Account eligible for bootloader unlock{RESET}")
+
+        elif button == 2:
+            exit(f"{RED}Account error, try again after {deadline}{RESET}")
+
+        elif button == 3:
+            exit(f"{RED}Account must be older than 30 days{RESET}")
 
     except Exception as e:
-        exit(f"{RED}state: {e}{RESET}")
 
+        exit(f"{RED}State request error: {e}{RESET}")
 
-state_request()
+# ==========================================
+#           APPLY REQUEST
+# ==========================================
 
 def apply_request():
-    print("\n[APPLY]:")
+
+    print(f"\n{WHITE}[APPLY REQUEST]{RESET}")
+
     try:
-        apply = requests.post(U_apply, data=json.dumps({"is_retry": True}), headers=headers)
-        print(f"Server response time: {apply.headers['Date']}")
-        if apply.json().get("code") != 0:
-            exit(apply.json())
-        data_ = apply.json().get("data", {}) or {}
-        apply_ = data_.get("apply_result", 0)
-        deadline_ = data_.get("deadline_format", "")
-        messages = {
-            1: "Application Successful",
-            4: f"\nAccount Error Please try again after {deadline_} (mm/dd)\n",
-            3: f"\nApplication quota limit reached, please try again after {deadline_.split()[0]} (mm/dd) {deadline_.split()[1]} (GMT+8)\n",
-            5: "\nApplication failed. Please try again later\n",
-            6: "\nPlease try again in a minute\n",
-            7: "\nPlease try again later\n"
-        }
-        print(messages.get(apply_, ""))
-        if apply_ == 1:
+
+        r = requests.post(U_apply,
+                data=json.dumps({"is_retry": True}),
+                headers=headers)
+
+        print("Server Time:", r.headers.get("Date"))
+
+        data = r.json()
+
+        if data.get("code") != 0:
+            exit(data)
+
+        result = data["data"]["apply_result"]
+        deadline = data["data"].get("deadline_format","")
+
+        if result == 1:
+
+            print(f"{GREEN}Application successful{RESET}")
             state_request()
-        elif apply_ in [4, 5, 6, 7]:
-            exit()
-        elif apply_ == 3:
+
+        elif result == 3:
+
+            print(f"{YELLOW}Daily quota reached. Retry tomorrow {deadline}{RESET}")
             return 1
+
+        elif result == 4:
+
+            exit(f"{RED}Account error. Try after {deadline}{RESET}")
+
+        else:
+
+            print(data)
+
     except Exception as e:
-        exit(f"apply: {e}")
 
+        exit(f"{RED}Apply error: {e}{RESET}")
 
-def get_ntp_time(servers=["pool.ntp.org", "time.google.com", "time.windows.com"]):
+# ==========================================
+#           TIME FUNCTIONS
+# ==========================================
+
+def ntp_time():
+
     client = ntplib.NTPClient()
-    for server in servers:
+
+    servers = ["pool.ntp.org","time.google.com","time.windows.com"]
+
+    for s in servers:
+
         try:
-            response = client.request(server, version=3, timeout=5)
-            return datetime.fromtimestamp(response.tx_time, timezone.utc)
-        except Exception:
-            continue
+
+            r = client.request(s,version=3)
+
+            return datetime.fromtimestamp(r.tx_time,timezone.utc)
+
+        except:
+            pass
+
     return datetime.now(timezone.utc)
 
-def get_beijing_time():
-    utc_time = get_ntp_time()
-    return utc_time.astimezone(timezone(timedelta(hours=8)))
+def beijing_time():
 
-def precise_sleep(target_time, precision=0.01):
-    while True:
-        diff = (target_time - datetime.now(target_time.tzinfo)).total_seconds()
-        if diff <= 0:
-            return
-        sleep_time = max(min(diff - precision/2, 1), precision)
-        time.sleep(sleep_time)
+    return ntp_time().astimezone(timezone(timedelta(hours=8)))
 
-def measure_latency(url, samples=5):
-    latencies = []
-    for _ in range(samples):
+# ==========================================
+#           LATENCY TEST
+# ==========================================
+
+def measure_latency():
+
+    samples=[]
+
+    for _ in range(5):
+
         try:
-            start = time.perf_counter()
-            requests.post(url, headers=headers, data='{}', timeout=2)
-            latencies.append((time.perf_counter() - start) * 1000)
-        except Exception:
-            continue
 
-    if len(latencies) < 3:
+            start=time.perf_counter()
+
+            requests.post(U_apply,headers=headers,data="{}",timeout=2)
+
+            samples.append((time.perf_counter()-start)*1000)
+
+        except:
+            pass
+
+    if len(samples)<3:
         return 200
 
-    latencies.sort()
-    trim = int(len(latencies) * 0.2)
-    trimmed = latencies[trim:-trim] if trim else latencies
-    return sum(trimmed)/len(trimmed) * 1.3
+    samples.sort()
 
-def schedule_daily_task():
-    beijing_tz = timezone(timedelta(hours=8))
+    trim=int(len(samples)*0.2)
+
+    samples=samples[trim:-trim] if trim else samples
+
+    return sum(samples)/len(samples)*1.3
+
+# ==========================================
+#         DAILY SCHEDULER
+# ==========================================
+
+def scheduler():
+
+    tz=timezone(timedelta(hours=8))
 
     while True:
-        now = get_beijing_time()
-        target = now.replace(hour=23, minute=57, second=0, microsecond=0)
-        if now >= target:
-            target += timedelta(days=1)
 
-        print(f"\nNext execution at: {target.strftime('%Y-%m-%d %H:%M:%S.%f')} CST")
-        while datetime.now(beijing_tz) < target:
-            time_left = (target - datetime.now(beijing_tz)).total_seconds()
-            if time_left > 300:
-                time.sleep(60)
-            else:
-                precise_sleep(target)
+        now=beijing_time()
 
-        latency = measure_latency(U_apply)
-        execution_time = target + timedelta(minutes=3) - timedelta(milliseconds=latency)
+        target=now.replace(hour=23,minute=57,second=0,microsecond=0)
 
-        print(f"Adjusted execution time: {execution_time.strftime('%H:%M:%S.%f')}")
-        precise_sleep(execution_time)
+        if now>=target:
 
-        result = apply_request()
-        if result == 1:
+            target+=timedelta(days=1)
+
+        print(f"\nNext run at: {target}")
+
+        while datetime.now(tz)<target:
+
+            time.sleep(30)
+
+        latency=measure_latency()
+
+        execute_time=target+timedelta(minutes=3)-timedelta(milliseconds=latency)
+
+        print("Execution time:",execute_time)
+
+        while datetime.now(tz)<execute_time:
+
+            time.sleep(0.5)
+
+        result=apply_request()
+
+        if result==1:
+
             return 1
 
+# ==========================================
+
+account_info()
+state_request()
 
 while True:
-    result = schedule_daily_task()
-    if result != 1:
+
+    r=scheduler()
+
+    if r!=1:
         break
