@@ -20,7 +20,7 @@ import requests, json, hashlib, urllib.parse, time, sys, os, base64, ntplib
 from datetime import datetime, timedelta, timezone
 from urllib.parse import parse_qs, urlparse, quote
 
-version = "1.5.3"
+version = "2.3.3"
 # ===== COS =====
 CYAN = "\033[96m"
 GREEN = "\033[92m"
@@ -33,11 +33,9 @@ print(
     f"\n{CYAN}{BOLD}╔══════════════════════════════════════╗{RESET}\n"
     f"{CYAN}{BOLD}║{RESET}    {WHITE}{BOLD}[V{version}] For issues or feedback{RESET}   {CYAN}{BOLD}║{RESET}\n"
     f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
-    f"{CYAN}{BOLD}║  {RESET} {YELLOW}Telegram Channel:{RESET} {GREEN}t.me/helproot{RESET}    {CYAN}{BOLD}║{RESET}\n"
+    f"{CYAN}{BOLD}║  {RESET} {YELLOW}Telegram Channel:{RESET} {GREEN}t.me/micomtool{RESET}    {CYAN}{BOLD}║{RESET}\n"
     f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
-    f"{CYAN}{BOLD}║   {RESET} {YELLOW}Telegram Bot:{RESET} {GREEN}@HelpRootAppBot{RESET}     {CYAN}{BOLD}║{RESET}\n"
-    f"{CYAN}{BOLD}╠══════════════════════════════════════╣{RESET}\n"
-    f"{CYAN}{BOLD}║         {RESET} {YELLOW}Made By:{RESET} {GREEN}@HelpRoot{RESET}          {CYAN}{BOLD}║{RESET}\n"
+    f"{CYAN}{BOLD}║         {RESET} {YELLOW}Made By:{RESET} {GREEN}@unmaskedbot{RESET}          {CYAN}{BOLD}║{RESET}\n"
     f"{CYAN}{BOLD}╚══════════════════════════════════════╝{RESET}\n"
 )
 
