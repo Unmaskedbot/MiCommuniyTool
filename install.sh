@@ -35,11 +35,11 @@ mkdir -p $HOME/.micomtool
 echo -e "${BLUE}[•] Downloading core tool...${RESET}"
 
 # Download main script
-curl -L https://raw.githubusercontent.com/ \
+curl -L https://github.com/Unmaskedbot/MiCommunityTool/blob/main/MiCommunityTool.py/ \
 -o $HOME/.micomtool/MiCommunityTool.py > /dev/null 2>&1
 
 # Check download
-if [ ! -f "$HOME/.@helproot/MiCommunityTool.py" ]; then
+if [ ! -f "$HOME/.micomtool/MiCommunityTool.py" ]; then
     echo -e "${RED}[✗] Download failed! Check internet connection.${RESET}"
     exit 1
 fi
@@ -47,17 +47,17 @@ fi
 echo -e "${BLUE}[•] Creating launcher...${RESET}"
 
 # Launcher command
-cat > $PREFIX/bin/@helproot << 'EOF'
+cat > $PREFIX/bin/micomtool << 'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 python $HOME/.@helproot/MiCommunityTool.py "$@"
 EOF
 
-chmod +x $PREFIX/bin/@helproot
+chmod +x $PREFIX/bin/micomtool
 
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════╗"
 echo -e "║          ✅ INSTALL COMPLETE         ║"
 echo -e "╚══════════════════════════════════════╝${RESET}"
-echo -e "${WHITE}Made By: ${CYAN}@HelpRoot${RESET}"
-echo -e "${YELLOW}Run tool using:${RESET} ${GREEN}@helproot${RESET}"
+echo -e "${WHITE}Made By: ${CYAN}unmaskedbot${RESET}"
+echo -e "${YELLOW}Run tool using:${RESET} ${GREEN}micomtool${RESET}"
 echo ""
